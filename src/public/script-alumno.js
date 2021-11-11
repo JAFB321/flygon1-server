@@ -4,7 +4,7 @@ const params = {
         max: 100
     },
     bpm: {
-        min: 90,
+        min: 60,
         max: 140
     },
     temp: {
