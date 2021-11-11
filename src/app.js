@@ -16,6 +16,7 @@ app.get('/api/salon', async (req, res) => {
         
         res.json(items);
     } catch (error) {
+        console.log(error);
         
     }
 
@@ -35,7 +36,9 @@ app.post('/api/salon', async (req, res) => {
         const item = await salon.create(data);
         
         res.json(item);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+    }
 }); 
 
 
@@ -63,7 +66,9 @@ app.post('/api/salon/:id/alumno', async (req, res) => {
         res.json({
             item: done
         });
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+    }
     
 }); 
 
@@ -82,6 +87,7 @@ app.get('/api/salon/:id', async (req, res) => {
             item: item
         });
     } catch (error) {
+        console.log(error);
         
     }
     
@@ -126,7 +132,7 @@ app.post('/api/alumno/:id/lectura', async (req, res) => {
                         al.lecturas = [];
                     }
                     
-                    al.ultimaLectura = data;s
+                    al.ultimaLectura = data;
                     al.lecturas.push(data);
                 }
             });
@@ -142,6 +148,7 @@ app.post('/api/alumno/:id/lectura', async (req, res) => {
             });
         }
     } catch (error) {
+        console.log(error);
         
     }
     
@@ -179,6 +186,7 @@ app.get('/api/alumno/:id', async (req, res) => {
         });
     }
     } catch (error) {
+        console.log(error);
         
     }
     

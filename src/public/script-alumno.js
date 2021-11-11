@@ -49,7 +49,7 @@ const setAlumnoData = (alumno) => {
 
     const {lecturas} = alumno;
     lecturas.forEach(lect => {
-        tablaLecturas.append(createLecturasItem(lect));
+        tablaLecturas.prepend(createLecturasItem(lect));
     })
 }
 
