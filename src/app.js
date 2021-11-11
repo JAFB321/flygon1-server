@@ -161,4 +161,4 @@ app.get('/api/alumno/:id', async (req, res) => {
 }); 
 
 // Listen
-app.listen(4000, () => console.log('Http server listening on port ', 4000));
+app.listen(process.env.PORT, () => console.log('Http server listening on port ', 4000));
