@@ -1,0 +1,74 @@
+.header .logo img {
+    max-height: 56px; 
+}
+
+.sidebar,.sidebar *{
+    background-color: #813838 !important;
+    color: white !important;
+}
+
+.header *{
+    color: #fff !important;
+}
+
+@media (min-width: 1200px){
+    .logo {
+        width: 230px !important;
+    }
+}
+
+.main .background-img{
+    background-image: url('background.svg');
+    height: 100% !important;
+    width: 60%;
+    background-size: 1198px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 20;
+}
+
+@media (max-width: 767px){
+    .main .background-img {
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        height: 500px!important;
+        width: 100%;
+        background-size: 900px;
+        margin-top: 50px;
+    }
+}
+
+.msgWELCOME{
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    text-align: center;
+    margin-top: 30%;
+}
+
+.msgWELCOME h1{
+    color: #6a2829;
+    font-weight: 800;
+    font-size: 50px !important;     
+}
+
+@media (max-width: 767px){
+    .msgWELCOME{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        position: absolute;
+        bottom: 25%;
+    }
+
+    .msgWELCOME h1{
+        font-size: 40px !important;     
+    }
+}
+
+@media (min-width: 768px){
+    .msgWELCOME{
+        width: 35% !important;
+    }
+}
