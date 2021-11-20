@@ -63,7 +63,7 @@ app.get('/api/salon', async (req, res) => {
 
             for (const lectura of lecturas) {
 
-                if(!salones.includes(lectura.salon)){
+                if(!salones.some(salon => salon.nombre === lectura.salon)){
                    salones.push({nombre: lectura.salon, _id: lectura.salon})
                     break;
                 }
