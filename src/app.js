@@ -1,5 +1,5 @@
 const express = require('express');
-const { DBsalon } = require('./database');
+const { DBalumno } = require('./database');
 
 // -------------- Http Server -------------- 
 const app = express();
@@ -8,145 +8,119 @@ app.use('/', express.static(__dirname + '/public'));
 
 
 // Router
-app.get('/api/salon', async (req, res) => {
-
+app.get('/api/salon/:id', async (req, res) => {
     try {
-        const salon = DBsalon();
-        const items = await salon.find({}, 'nombre');
-        
-        res.json(items);
-    } catch (error) {
-        console.log(error);
-        
-    }
+        const { id: salonID } = req.params;
 
-}); 
+        const alumno = DBalumno();
+        const items = await alumno.find({_id: id});
 
+        const alumnosSalon = [];
 
-app.post('/api/salon', async (req, res) => {
-    try {
-        const { nombre } = req.body;
+        for (let al of items) {
+            
+            const lecturas = al.lecturas;
+            // const lecturas = al.lecturas.reverse();
 
-        const data  = {
-            nombre,
-            alumnos: []
+            for (const lectura of lecturas) {
+
+                if(lectura.salon === salonID){
+                    alumnosSalon.push({
+                        expediente: al.expediente,
+                        nombre: al.nombre,
+                        ultimaLectura: lectura
+                    });
+                    break;
+                }
+
+            }
+
         }
-        
-        const salon = DBsalon();
-        const item = await salon.create(data);
-        
-        res.json(item);
+
+        res.json(alumnosSalon);
+
     } catch (error) {
         console.log(error);
+        
     }
-}); 
 
+});
 
-app.post('/api/salon/:id/alumno', async (req, res) => {
+// Agregar alumno
+app.post('/api/alumno', async (req, res) => {
     try {
-        const {id} = req.params;
         const { expediente, nombre } = req.body;
 
         const data  = {
             nombre,
             expediente,
-            lecturas: []
+            lecturas: [],
+            ultimaLectura: {}
         }
         
-        const salon = DBsalon();
-        const item = await salon.findById(id);
+        const alumno = DBalumno();
+        const item = await alumno.create(data);
 
-        if(item.alumnos === undefined){
-            item.alumnos = [];
-        }
-
-        item.alumnos.push(data);
-        const done = await item.save();
-        
-        res.json({
-            item: done
-        });
+        res.json(item);
     } catch (error) {
         console.log(error);
     }
     
 }); 
 
-app.get('/api/salon/:id', async (req, res) => {
-    try {
-        const {id} = req.params;
+// app.get('/api/salon/:id', async (req, res) => {
+//     try {
+//         const {id} = req.params;
         
-        const salon = DBsalon();
-        const item = await salon.findById(id);
+//         const salon = DBsalon();
+//         const item = await salon.findById(id);
         
-        item.alumnos.forEach(al => {
-            al.lecturas = [];
-        });
+//         item.alumnos.forEach(al => {
+//             al.lecturas = [];
+//         });
 
-        res.json({
-            item: item
-        });
-    } catch (error) {
-        console.log(error);
+//         res.json({
+//             item: item
+//         });
+//     } catch (error) {
+//         console.log(error);
         
-    }
+//     }
     
-}); 
+// }); 
 
 
 app.post('/api/alumno/:id/lectura', async (req, res) => {
     try {
         const { id } = req.params;
         const { temp, ox, bpm } = req.body;
-    
+        
+        const salon = "EL28";
+
+        const alumno = DBalumno();
+        const item = await alumno.find({_id: id})[0];
     
         const data  = {
             temp,
             ox,
             bpm,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            salon
         }
         
-        const salon = DBsalon();
+        if(item.lecturas === undefined){
+            item.lecturas = [];
+        }
+
+        item.ultimaLectura = data;
+        item.lecturas.push(data);
         
-        const items = await salon.find({});
-    
-        // const item = items.find(({_doc: item}) => item.alumnos.includes(({_doc: al}) => {
-        //     return al.expediente === id;
-        // }));
-        
-        // const item3 = items.forEach(({_doc: item}) => console.log(item));
-    
-        const item = items.find(({_doc: item}) => {
-            const al = item.alumnos.find(({_doc: al}) => al.expediente === id);
-    
-            return al !== undefined;
+        const done = await item.save();
+
+        res.json({
+            error: !done
         });
     
-    
-    
-        if(item){
-            item.alumnos.forEach((al) => {
-                if(al.expediente === id){
-                    if(al.lecturas === undefined){
-                        al.lecturas = [];
-                    }
-                    
-                    al.ultimaLectura = data;
-                    al.lecturas.push(data);
-                }
-            });
-            const done = await item.save();
-            
-            res.json({
-                error: !done
-            });
-        }
-        else{
-            res.json({
-                error: true
-            });
-        }
     } catch (error) {
         console.log(error);
         
@@ -158,40 +132,25 @@ app.post('/api/alumno/:id/lectura', async (req, res) => {
 app.get('/api/alumno/:id', async (req, res) => {
     try {
         const { id } = req.params;
-    
-    const salon = DBsalon();
-    const items = await salon.find({});
+        const salonID = req.query.salonID;
 
-    const item = items.find(({_doc: item}) => {
-        const al = item.alumnos.find(({_doc: al}) => al.expediente === id);
+        const alumno = DBalumno();
+        const item = await alumno.find({_id: id})[0];
 
-        return al !== undefined;
-    });
+        res.json(item);
 
-
-
-    if(item){
-        const alumno = item.alumnos.find(al => {
-            return al.expediente === id;
-        });
-        
-        res.json({
-            item: alumno,
-            error: !alumno
-        });
-    }
-    else{
-        res.json({
-            error: true
-        });
-    }
     } catch (error) {
         console.log(error);
         
     }
-    
 
 }); 
+
+
+// Nayely Desiret Mendivil Ramirez - 123456
+// Jose Guillermo Mendoza Gutierrez - 123445
+// Isaias Reyes Lara - 12345
+// voluntario - 1122
 
 // Listen
 app.listen(process.env.PORT, () => console.log('Http server listening on port ', 4000));
