@@ -29,13 +29,14 @@ const isTempOk = (temp) => {
 }
 
 const createLecturasItem = (lect) => {
-    const { bpm, ox, temp, timestamp } = lect;
+    const { bpm, ox, temp, timestamp, salon } = lect;
 
     const rowItem = document.createElement('tr');
     rowItem.innerHTML = `
         <td class="${isOxOk(ox) ? "" : "table-danger"}">${ox}</td>
         <td class="${isTempOk(temp) ? "" : "table-danger"}">${temp}</td>
         <td class="${isBPMOk(bpm) ? "" : "table-danger"}">${bpm}</td>
+        <td>${salon}</td>
         <td>${new Date(timestamp).toLocaleDateString("es-ES", {month: "long",  day: "numeric"})}</td>`;
 
     return rowItem;
@@ -64,4 +65,4 @@ if(!alumnoID){
 const alumno = fetch('/api/alumno/'+alumnoID);
 
 alumno.then(data => data.json())
-.then(alumno => setAlumnoData(alumno.item));
+.then(alumno => setAlumnoData(alumno));

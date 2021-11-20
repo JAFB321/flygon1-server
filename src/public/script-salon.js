@@ -67,4 +67,4 @@ if(!salonID){
 const salon = fetch('/api/salon/'+salonID);
 
 salon.then(data => data.json())
-.then(salon => setSalonData(salon.item));
+.then(salon => setSalonData(salon));

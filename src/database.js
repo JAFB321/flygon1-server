@@ -44,6 +44,7 @@ const alumnoSchema = new Schema({
         temp: Number,
         ox: Number,
         bpm: Number,
+        salon: String
     },
     lecturas: [
         {

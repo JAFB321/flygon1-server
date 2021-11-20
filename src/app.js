@@ -13,7 +13,7 @@ app.get('/api/salon/:id', async (req, res) => {
         const { id: salonID } = req.params;
 
         const alumno = DBalumno();
-        const items = await alumno.find({_id: id});
+        const items = await alumno.find();
 
         const alumnosSalon = [];
 
@@ -37,7 +37,42 @@ app.get('/api/salon/:id', async (req, res) => {
 
         }
 
-        res.json(alumnosSalon);
+        res.json({
+            nombre: salonID,
+            alumnos: alumnosSalon
+        });
+
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+});
+
+app.get('/api/salon', async (req, res) => {
+    try {
+        const alumno = DBalumno();
+        const items = await alumno.find();
+
+        const salones = [];
+
+        for (let al of items) {
+            
+            const lecturas = al.lecturas;
+            // const lecturas = al.lecturas.reverse();
+
+            for (const lectura of lecturas) {
+
+                if(!salones.includes(lectura.salon)){
+                   salones.push({nombre: lectura.salon, _id: lectura.salon})
+                    break;
+                }
+
+            }
+
+        }
+
+        res.json(salones);
 
     } catch (error) {
         console.log(error);
@@ -98,7 +133,7 @@ app.post('/api/alumno/:id/lectura', async (req, res) => {
         const salon = "EL28";
 
         const alumno = DBalumno();
-        const item = await alumno.find({_id: id})[0];
+        const item = (await alumno.find({expediente: id}))[0];
     
         const data  = {
             temp,
@@ -135,7 +170,7 @@ app.get('/api/alumno/:id', async (req, res) => {
         const salonID = req.query.salonID;
 
         const alumno = DBalumno();
-        const item = await alumno.find({_id: id})[0];
+        const item = (await alumno.find({expediente: id}))[0];
 
         res.json(item);
 
@@ -153,4 +188,4 @@ app.get('/api/alumno/:id', async (req, res) => {
 // voluntario - 1122
 
 // Listen
-app.listen(process.env.PORT, () => console.log('Http server listening on port ', 4000));
+app.listen(process.env.PORT || 4000, () => console.log('Http server listening on port ', 4000));
