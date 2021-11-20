@@ -19,8 +19,8 @@ app.get('/api/salon/:id', async (req, res) => {
 
         for (let al of items) {
             
-            const lecturas = al.lecturas;
-            // const lecturas = al.lecturas.reverse();
+            // const lecturas = al.lecturas;
+            const lecturas = al.lecturas.reverse();
 
             for (const lectura of lecturas) {
 
